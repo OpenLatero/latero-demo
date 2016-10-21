@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<laterographics_xml type="Generator">
+  <Generator type="Canvas">
+    <Pattern type="Group">
+      <operation type="max"/>
+      <Pattern type="Texture" subtype="LinearGrating">
+        <angle units="degree">90</angle>
+        <seed units="mm">0,0</seed>
+        <Grating>
+          <enable>yes</enable>
+          <ridge_size units="mm">8</ridge_size>
+          <gap_size units="mm">18</gap_size>
+          <velocity units="Hz">0.5</velocity>
+        </Grating>
+        <amplitude>1</amplitude>
+        <vibration>
+          <enable>yes</enable>
+          <frequency units="Hz">50</frequency>
+          <amplitude>1</amplitude>
+          <blend_mode>high</blend_mode>
+        </vibration>
+      </Pattern>
+    </Pattern>
+  </Generator>
+</laterographics_xml>

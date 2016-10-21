@@ -1,0 +1,10 @@
+Creating an App Bundle
+----------------------
+
+The process is currently done manually.
+
+1. Right click on LateroDemo.app and select Show Package Contents.
+2. Copy the executable to the MacOS folder.
+3. Run "dylibbundler -od -b -x ./LateroDemo.app/Contents/MacOS/latero-studio -d ./LateroDemo.app/Contents/libs/" to fix library links. This app can be installed with MacPorts.
+
+Todo: It seems possible to do this with CMake and XCode.
