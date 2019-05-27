@@ -1,5 +1,8 @@
 include(FindPkgConfig)
 
+set (CMAKE_CXX_STANDARD 11)
+set (CMAKE_CXX_FLAGS "--std=gnu++11 -fpermissive ${CMAKE_CXX_FLAGS}")
+
 # add /usr/loca/lib/pkgconfig (necessary on macOS)
 set( ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:/usr/local/lib/pkgconfig" )
 
