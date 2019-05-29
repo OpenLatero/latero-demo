@@ -5,7 +5,7 @@
 MainWindow::MainWindow(latero::graphics::TactileEngine *tEngine, latero::graphics::AudioEngine *aEngine) :
 	managerWidget_(tEngine, aEngine)
 {
-	set_title("STReSS2 Tactile Graphics Studio");
+	set_title("Latero Demo");
 	set_border_width(10);
 	set_size_request(1000,800);
 
@@ -50,7 +50,7 @@ Gtk::Widget *MainWindow::CreateMenu()
 	buf << "</ui>";
 
 	try
-	{	
+	{
 		uiManager_->add_ui_from_string(buf.str());
 	}
 	catch(const Glib::Error& ex)
@@ -62,7 +62,7 @@ Gtk::Widget *MainWindow::CreateMenu()
 	return uiManager_->get_widget("/MenuBar");
 }
 
-MainWindow::~MainWindow() 
+MainWindow::~MainWindow()
 {
 }
 
@@ -80,6 +80,3 @@ void MainWindow::OnClose()
 {
 	managerWidget_.Close();
 }
-
-
-	

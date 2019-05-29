@@ -1,10 +1,18 @@
-Creating an App Bundle
-----------------------
+ MAC OS X
+*********
 
-The process is currently done manually.
+Step 0: Make sure the latero and latero-graphics libraries are installed
+--------------------------------------------------
+See instructions in INSTALL file for latero and latero-graphics projects.
 
-1. Right click on LateroDemo.app and select Show Package Contents.
-2. Copy the executable to the MacOS folder.
-3. Run "dylibbundler -od -b -x ./LateroDemo.app/Contents/MacOS/latero-studio -d ./LateroDemo.app/Contents/libs/" to fix library links. This app can be installed with MacPorts.
+Step 1: Install XQuartz
+------------------------
+If you already have XQuartz, skip to step 2. Otherwise, install it from http://xquartz.macosforge.org/landing/. X11 is no longer included with OS X.
 
-Todo: It seems possible to do this with CMake and XCode.
+Step 2: Build latero-demo
+-----------------------------
+>> cmake . -G Xcode
+>> xcodebuild -target latero-demo
+>> ./create_app_bundle.sh
+
+You should now be able to launch the program by clicking on the latero-demo app bundle.

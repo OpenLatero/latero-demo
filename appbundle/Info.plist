@@ -3,15 +3,15 @@
 <plist version="1.0">
 <dict>
   <key>CFBundleGetInfoString</key>
-  <string>LateroStudio</string>
+  <string>LateroDemo</string>
   <key>CFBundleExecutable</key>
-  <string>latero-studio</string>
+  <string>latero-demo</string>
   <key>CFBundleIdentifier</key>
   <string>org.openlatero.www</string>
   <key>CFBundleName</key>
-  <string>LateroStudio</string>
+  <string>LateroDemo</string>
   <key>CFBundleIconFile</key>
-  <string>latero-studio.icns</string>
+  <string>latero-demo.icns</string>
   <key>CFBundleShortVersionString</key>
   <string>0.01</string>
   <key>CFBundleInfoDictionaryVersion</key>
