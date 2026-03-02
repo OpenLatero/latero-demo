@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 	latero::Tactograph dev;
 
 	std::cout << "Starting engines...\n";
-	latero::graphics::TactileEngine tEngine(&dev, boost::posix_time::microseconds(1E6/UpdateRateHz));
+	latero::graphics::TactileEngine tEngine(&dev, boost::posix_time::microseconds((long)(1E6/UpdateRateHz)));
 	latero::graphics::AudioEngine aEngine(&dev, boost::posix_time::milliseconds(30));
 	tEngine.Start();
 	// aEngine.Start(); // we don't need audio

@@ -6,6 +6,9 @@ set (CMAKE_CXX_FLAGS "--std=gnu++11 -fpermissive ${CMAKE_CXX_FLAGS}")
 # add /usr/loca/lib/pkgconfig (necessary on macOS)
 set( ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:/usr/local/lib/pkgconfig" )
 
+# todo: added manually - should it be necessary or already set up by latero-graphics?
+find_package(Boost CONFIG COMPONENTS system thread filesystem REQUIRED)
+
 pkg_check_modules (LATERO_GRAPHICS latero-graphics)
 link_directories(${LATERO_GRAPHICS_LIBRARY_DIRS})
 include_directories(${LATERO_GRAPHICS_INCLUDE_DIRS})
