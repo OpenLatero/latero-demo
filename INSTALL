@@ -11,8 +11,10 @@ If you already have XQuartz, skip to step 2. Otherwise, install it from http://x
 
 Step 2: Build latero-demo
 -----------------------------
->> cmake . -G Xcode
->> xcodebuild -target latero-demo
->> ./create_app_bundle.sh
+>> mkdir build
+>> cd build
+>> cmake ..
+>> make
+>> ./create_app_bundle.sh // hasn't been tested in a while
 
 You should now be able to launch the program by clicking on the latero-demo app bundle.
