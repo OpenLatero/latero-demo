@@ -1,20 +1,19 @@
  MAC OS X
 *********
 
-Step 0: Make sure the latero and latero-graphics libraries are installed
---------------------------------------------------
-See instructions in INSTALL file for latero and latero-graphics projects.
+Install dependencies
+--------------------
+Make sure the latero and latero-graphics libraries are installed. See instructions in INSTALL file for latero and latero-graphics projects.
 
-Step 1: Install XQuartz
-------------------------
-If you already have XQuartz, skip to step 2. Otherwise, install it from http://xquartz.macosforge.org/landing/. X11 is no longer included with OS X.
+Install X11 server:
+>> sudo port install xorg-server
 
-Step 2: Build latero-demo
------------------------------
+Build latero-demo
+-----------------
 >> mkdir build
 >> cd build
 >> cmake ..
 >> make
->> ./create_app_bundle.sh // hasn't been tested in a while
+>> ../create_app_bundle.sh
 
 You should now be able to launch the program by clicking on the latero-demo app bundle.

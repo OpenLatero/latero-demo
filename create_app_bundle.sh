@@ -21,20 +21,20 @@ mkdir LateroDemo.app/Contents
 mkdir LateroDemo.app/Contents/MacOS
 
 echo "Copying resources..."
-cp -r resources LateroDemo.app/Contents/Resources
+cp -r ../resources LateroDemo.app/Contents/Resources
 
 echo "Copying Info.plist..."
-cp appbundle/Info.plist LateroDemo.app/Contents/
+cp ../appbundle/Info.plist LateroDemo.app/Contents/
 
 echo "Copying icons..."
-cp appbundle/latero-demo.icns LateroDemo.app/Contents/Resources/
+cp ../appbundle/latero-demo.icns LateroDemo.app/Contents/Resources/
 
 echo "Copying executable..."
-if [ ! -f build/src/latero-demo ]; then
+if [ ! -f src/latero-demo ]; then
     echo "Executable not found in src/Debug/latero-demo, aborting."
     rm -rf LateroDemo.app
 fi
-cp build/src/latero-demo LateroDemo.app/Contents/MacOS/
+cp src/latero-demo LateroDemo.app/Contents/MacOS/
 
 echo "Copying libraries..."
 dylibbundler -od -b -x ./LateroDemo.app/Contents/MacOS/latero-demo -d ./LateroDemo.app/Contents/libs/
