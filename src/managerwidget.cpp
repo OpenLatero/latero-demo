@@ -30,7 +30,7 @@ ManagerWidget::ManagerWidget(latero::graphics::TactileEngine *tEngine, latero::g
 
 };
 
-void ManagerWidget::OnPageSwitch(GtkNotebookPage* page, guint idx)
+void ManagerWidget::OnPageSwitch(Gtk::Widget* page, guint page_num)
 {
 	UpdateCurrentGenerator();
 }
@@ -72,8 +72,8 @@ void ManagerWidget::Open()
 {
 	Gtk::FileChooserDialog dialog("Please select a generator file.", Gtk::FILE_CHOOSER_ACTION_OPEN);
 
-	Gtk::FileFilter filter;
-	filter.add_pattern("*.gen");
+	Glib::RefPtr<Gtk::FileFilter> filter = Gtk::FileFilter::create();
+	filter->add_pattern("*.gen");
  
 	std::string dir = Glib::get_current_dir();
 	dir += "/cards"; // TODO

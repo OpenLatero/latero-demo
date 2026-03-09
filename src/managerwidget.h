@@ -24,7 +24,7 @@ protected:
 	bool OnKeyPress(GdkEventKey* event);
 	
 	void UpdateCurrentGenerator();
-	void OnPageSwitch(GtkNotebookPage* page, guint idx);
+	void OnPageSwitch(Gtk::Widget* page, guint page_num);
 
 	Gtk::Notebook notebook_;
 	VirtualSurfaceWidget preview_;
