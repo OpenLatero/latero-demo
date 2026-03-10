@@ -93,13 +93,11 @@ int main(int argc, char *argv[])
     chdir(path.c_str());
     
 	std::cout << "Creating GUI thread...\n";
-	Gtk::Main kit(argc, argv);
-    
+	auto app = Gtk::Application::create(argc, argv, "org.openlatero.latero-demo");
     MainWindow wnd(&tEngine, &aEngine);
     for (int i=0; i<defaultGen.size(); ++i)
         wnd.AddGenerator(defaultGen[i]);
-
-    Gtk::Main::run(wnd);
+	app->run(wnd);
 
 	std::cout << "Stopping engines...\n";
 	tEngine.Stop();
