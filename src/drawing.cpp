@@ -41,12 +41,22 @@ VirtualSurfaceArea::VirtualSurfaceArea(const latero::Tactograph *dev) :
 	dev_(dev),
 	tdState_(dev->GetFrameSizeX(), dev->GetFrameSizeY())
 {
+	// TODO_GTKMM3
+    signal_draw().connect(sigc::mem_fun(*this, &VirtualSurfaceArea::OnDraw));	
 }
 
 VirtualSurfaceArea::~VirtualSurfaceArea()
 {
 }
 
+// TODO_GTKMM3: this replaced on_expose_event
+bool VirtualSurfaceArea::OnDraw(const Cairo::RefPtr<Cairo::Context>& cr)
+{
+	DrawCursor(cr);
+	return true;
+}
+
+/*
 bool VirtualSurfaceArea::on_expose_event(GdkEventExpose* event)
 {
 	Cairo::RefPtr<Cairo::Context> cr = get_window()->create_cairo_context();
@@ -60,8 +70,9 @@ bool VirtualSurfaceArea::on_expose_event(GdkEventExpose* event)
 
 	return true;
 }
+*/
 
-Cairo::RefPtr<Cairo::Pattern> VirtualSurfaceArea::GetCursorDrawing(Cairo::RefPtr<Cairo::Context> &cr)
+Cairo::RefPtr<Cairo::Pattern> VirtualSurfaceArea::GetCursorDrawing(const Cairo::RefPtr<Cairo::Context> &cr)
 {
 	cr->push_group();
     double dpmm_x =  GetWidth() / GetWidthMilli();
@@ -74,7 +85,7 @@ Cairo::RefPtr<Cairo::Pattern> VirtualSurfaceArea::GetCursorDrawing(Cairo::RefPtr
 }
 
 Cairo::RefPtr<Cairo::Pattern>
-VirtualSurfaceArea::GetDisplayDrawing(Cairo::RefPtr<Cairo::Context> &mmContext)
+VirtualSurfaceArea::GetDisplayDrawing(const Cairo::RefPtr<Cairo::Context> &mmContext)
 {
 	mmContext->push_group();
 
@@ -115,7 +126,7 @@ VirtualSurfaceArea::GetDisplayDrawing(Cairo::RefPtr<Cairo::Context> &mmContext)
 }
 
 
-void VirtualSurfaceArea::DrawCursor(Cairo::RefPtr<Cairo::Context> &cr)
+void VirtualSurfaceArea::DrawCursor(const Cairo::RefPtr<Cairo::Context> &cr)
 {
 	cr->set_source(GetCursorDrawing(cr));
 	cr->paint();

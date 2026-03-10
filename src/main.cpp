@@ -6,6 +6,8 @@
 #include <laterographics/audioengine.h>
 #include <laterographics/graphics/canvas.h>
 #include <boost/program_options.hpp>
+#include <limits.h>
+#include <mach-o/dyld.h>
 
 #ifdef __APPLE__
 #include "CoreFoundation/CoreFoundation.h"
@@ -21,17 +23,26 @@ std::string GetResourcePath() {
     std::string rv = "../../resources/";
 
 #ifdef __APPLE__
-    CFBundleRef mainBundle = CFBundleGetMainBundle();
-    CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
-    char path[PATH_MAX];
-    if (!CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)path, PATH_MAX))
-    {
-        // error!
-    }
-    CFRelease(resourcesURL);
+	// check if running in app bundle
+	char path[PATH_MAX];
+    uint32_t size = sizeof(path);
+    if (_NSGetExecutablePath(path, &size) == 0)
+	{
+        if (strstr(path, ".app/Contents/MacOS/") != nullptr)
+		{
+			// running in app bundle
+			CFBundleRef mainBundle = CFBundleGetMainBundle();
+    		CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
+    		char path[PATH_MAX];
+    		if (!CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)path, PATH_MAX))
+    		{
+        		// error!
+    		}
+    		CFRelease(resourcesURL);
     
-    rv = path;
-    
+    		rv = path;
+		}
+	}
 #endif
     
     return rv;
