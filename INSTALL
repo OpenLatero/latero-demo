@@ -6,7 +6,7 @@ Tested on MacOS Tahoe 26.3.1.
 Install the latero and latero-graphics libraries.
 
 Build the app
->> cmake -B build
+>> cmake --preset default
 >> cmake --build build
 
 Run the app
