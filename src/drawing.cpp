@@ -37,31 +37,28 @@
 #include <time.h>
 #include <unistd.h>
 
+
 VirtualSurfaceArea::VirtualSurfaceArea(const latero::Tactograph *dev) :
 	dev_(dev),
 	tdState_(dev->GetFrameSizeX(), dev->GetFrameSizeY())
 {
+    signal_draw().connect(sigc::mem_fun(*this, &VirtualSurfaceArea::OnDraw));	
 }
+
 
 VirtualSurfaceArea::~VirtualSurfaceArea()
 {
 }
 
-bool VirtualSurfaceArea::on_expose_event(GdkEventExpose* event)
+
+bool VirtualSurfaceArea::OnDraw(const Cairo::RefPtr<Cairo::Context>& cr)
 {
-	Cairo::RefPtr<Cairo::Context> cr = get_window()->create_cairo_context();
-	if (event)
-	{
-		cr->rectangle(event->area.x, event->area.y, event->area.width, event->area.height);
-    		cr->clip();
-	}
-
 	DrawCursor(cr);
-
 	return true;
 }
 
-Cairo::RefPtr<Cairo::Pattern> VirtualSurfaceArea::GetCursorDrawing(Cairo::RefPtr<Cairo::Context> &cr)
+
+Cairo::RefPtr<Cairo::Pattern> VirtualSurfaceArea::GetCursorDrawing(const Cairo::RefPtr<Cairo::Context> &cr)
 {
 	cr->push_group();
     double dpmm_x =  GetWidth() / GetWidthMilli();
@@ -73,8 +70,9 @@ Cairo::RefPtr<Cairo::Pattern> VirtualSurfaceArea::GetCursorDrawing(Cairo::RefPtr
 	return cr->pop_group();
 }
 
+
 Cairo::RefPtr<Cairo::Pattern>
-VirtualSurfaceArea::GetDisplayDrawing(Cairo::RefPtr<Cairo::Context> &mmContext)
+VirtualSurfaceArea::GetDisplayDrawing(const Cairo::RefPtr<Cairo::Context> &mmContext)
 {
 	mmContext->push_group();
 
@@ -115,7 +113,7 @@ VirtualSurfaceArea::GetDisplayDrawing(Cairo::RefPtr<Cairo::Context> &mmContext)
 }
 
 
-void VirtualSurfaceArea::DrawCursor(Cairo::RefPtr<Cairo::Context> &cr)
+void VirtualSurfaceArea::DrawCursor(const Cairo::RefPtr<Cairo::Context> &cr)
 {
 	cr->set_source(GetCursorDrawing(cr));
 	cr->paint();
@@ -126,14 +124,11 @@ void VirtualSurfaceArea::SetDisplayState(const latero::BiasedImg &f)
 {
 	assert(f.Size() ==  tdState_.Size());
 
-    
 	//tdPos_ = pos;
 	tdState_ = f;
     
     Invalidate();
 }
-
-
 
 
 void VirtualSurfaceArea::Invalidate()
@@ -145,10 +140,6 @@ void VirtualSurfaceArea::Invalidate()
         win->invalidate_rect(r, false);
     }
 }
-
-
-
-
 
 
 VirtualSurfaceWidget::VirtualSurfaceWidget(const latero::Tactograph *dev, latero::graphics::GeneratorPtr gen, bool refreshBackground) :
@@ -165,10 +156,10 @@ VirtualSurfaceWidget::VirtualSurfaceWidget(const latero::Tactograph *dev, latero
 }
 
 
-
 VirtualSurfaceWidget::~VirtualSurfaceWidget()
 {
 }
+
 
 bool VirtualSurfaceWidget::RefreshCursor()
 {
@@ -185,7 +176,3 @@ void VirtualSurfaceWidget::SetGenerator(latero::graphics::GeneratorPtr gen)
 {
 	peer_ = gen;
 }
-
-
-
-

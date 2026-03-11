@@ -47,7 +47,7 @@ public:
 	inline uint GetWidth() { return get_allocation().get_width(); };
 	inline uint GetHeight() { return get_allocation().get_height(); };
 
-	Cairo::RefPtr<Cairo::Pattern> GetDisplayDrawing(Cairo::RefPtr<Cairo::Context> &mmContext);
+	Cairo::RefPtr<Cairo::Pattern> GetDisplayDrawing(const Cairo::RefPtr<Cairo::Context> &mmContext);
     
 protected:
 
@@ -57,11 +57,12 @@ protected:
 	// invalidate the entire window
 	void Invalidate();
 
-	Cairo::RefPtr<Cairo::Pattern> GetCursorDrawing(Cairo::RefPtr<Cairo::Context> &cr);
+	Cairo::RefPtr<Cairo::Pattern> GetCursorDrawing(const Cairo::RefPtr<Cairo::Context> &cr);
 
-	void DrawCursor(Cairo::RefPtr<Cairo::Context> &cr);
+	void DrawCursor(const Cairo::RefPtr<Cairo::Context> &cr);
 
-	virtual bool on_expose_event(GdkEventExpose* event);
+	bool OnDraw(const Cairo::RefPtr<Cairo::Context>& cr);
+	//virtual bool on_expose_event(GdkEventExpose* event);
     
     
 

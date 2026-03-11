@@ -6,6 +6,8 @@
 #include <laterographics/audioengine.h>
 #include <laterographics/graphics/canvas.h>
 #include <boost/program_options.hpp>
+#include <limits.h>
+#include <mach-o/dyld.h>
 
 #ifdef __APPLE__
 #include "CoreFoundation/CoreFoundation.h"
@@ -21,17 +23,26 @@ std::string GetResourcePath() {
     std::string rv = "../../resources/";
 
 #ifdef __APPLE__
-    CFBundleRef mainBundle = CFBundleGetMainBundle();
-    CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
-    char path[PATH_MAX];
-    if (!CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)path, PATH_MAX))
-    {
-        // error!
-    }
-    CFRelease(resourcesURL);
+	// check if running in app bundle
+	char path[PATH_MAX];
+    uint32_t size = sizeof(path);
+    if (_NSGetExecutablePath(path, &size) == 0)
+	{
+        if (strstr(path, ".app/Contents/MacOS/") != nullptr)
+		{
+			// running in app bundle
+			CFBundleRef mainBundle = CFBundleGetMainBundle();
+    		CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
+    		char path[PATH_MAX];
+    		if (!CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)path, PATH_MAX))
+    		{
+        		// error!
+    		}
+    		CFRelease(resourcesURL);
     
-    rv = path;
-    
+    		rv = path;
+		}
+	}
 #endif
     
     return rv;
@@ -82,13 +93,11 @@ int main(int argc, char *argv[])
     chdir(path.c_str());
     
 	std::cout << "Creating GUI thread...\n";
-	Gtk::Main kit(argc, argv);
-    
+	auto app = Gtk::Application::create(argc, argv, "org.openlatero.latero-demo");
     MainWindow wnd(&tEngine, &aEngine);
     for (int i=0; i<defaultGen.size(); ++i)
         wnd.AddGenerator(defaultGen[i]);
-
-    Gtk::Main::run(wnd);
+	app->run(wnd);
 
 	std::cout << "Stopping engines...\n";
 	tEngine.Stop();
