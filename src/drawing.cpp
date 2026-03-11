@@ -37,40 +37,26 @@
 #include <time.h>
 #include <unistd.h>
 
+
 VirtualSurfaceArea::VirtualSurfaceArea(const latero::Tactograph *dev) :
 	dev_(dev),
 	tdState_(dev->GetFrameSizeX(), dev->GetFrameSizeY())
 {
-	// TODO_GTKMM3
     signal_draw().connect(sigc::mem_fun(*this, &VirtualSurfaceArea::OnDraw));	
 }
+
 
 VirtualSurfaceArea::~VirtualSurfaceArea()
 {
 }
 
-// TODO_GTKMM3: this replaced on_expose_event
+
 bool VirtualSurfaceArea::OnDraw(const Cairo::RefPtr<Cairo::Context>& cr)
 {
 	DrawCursor(cr);
 	return true;
 }
 
-/*
-bool VirtualSurfaceArea::on_expose_event(GdkEventExpose* event)
-{
-	Cairo::RefPtr<Cairo::Context> cr = get_window()->create_cairo_context();
-	if (event)
-	{
-		cr->rectangle(event->area.x, event->area.y, event->area.width, event->area.height);
-    		cr->clip();
-	}
-
-	DrawCursor(cr);
-
-	return true;
-}
-*/
 
 Cairo::RefPtr<Cairo::Pattern> VirtualSurfaceArea::GetCursorDrawing(const Cairo::RefPtr<Cairo::Context> &cr)
 {
@@ -83,6 +69,7 @@ Cairo::RefPtr<Cairo::Pattern> VirtualSurfaceArea::GetCursorDrawing(const Cairo::
 	
 	return cr->pop_group();
 }
+
 
 Cairo::RefPtr<Cairo::Pattern>
 VirtualSurfaceArea::GetDisplayDrawing(const Cairo::RefPtr<Cairo::Context> &mmContext)
@@ -137,14 +124,11 @@ void VirtualSurfaceArea::SetDisplayState(const latero::BiasedImg &f)
 {
 	assert(f.Size() ==  tdState_.Size());
 
-    
 	//tdPos_ = pos;
 	tdState_ = f;
     
     Invalidate();
 }
-
-
 
 
 void VirtualSurfaceArea::Invalidate()
@@ -156,10 +140,6 @@ void VirtualSurfaceArea::Invalidate()
         win->invalidate_rect(r, false);
     }
 }
-
-
-
-
 
 
 VirtualSurfaceWidget::VirtualSurfaceWidget(const latero::Tactograph *dev, latero::graphics::GeneratorPtr gen, bool refreshBackground) :
@@ -176,10 +156,10 @@ VirtualSurfaceWidget::VirtualSurfaceWidget(const latero::Tactograph *dev, latero
 }
 
 
-
 VirtualSurfaceWidget::~VirtualSurfaceWidget()
 {
 }
+
 
 bool VirtualSurfaceWidget::RefreshCursor()
 {
@@ -196,7 +176,3 @@ void VirtualSurfaceWidget::SetGenerator(latero::graphics::GeneratorPtr gen)
 {
 	peer_ = gen;
 }
-
-
-
-
