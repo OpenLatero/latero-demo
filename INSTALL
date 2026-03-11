@@ -1,19 +1,17 @@
- MAC OS X
-*********
+ MacOS
+*****
 
-Install dependencies
---------------------
-Make sure the latero and latero-graphics libraries are installed. See instructions in INSTALL file for latero and latero-graphics projects.
+Tested on MacOS Tahoe 26.3.1.
 
-Install X11 server:
->> sudo port install xorg-server
+Install the latero and latero-graphics libraries.
 
-Build latero-demo
------------------
->> mkdir build
->> cd build
->> cmake ..
->> make
->> ../create_app_bundle.sh
+Build the app
+>> cmake -B build
+>> cmake --build build
 
+Run the app
+>> build/src/latero-demo
+ 
+ Create an app bundle (currently broken)
+ >> ../create_app_bundle.sh
 You should now be able to launch the program by clicking on the latero-demo app bundle.

@@ -20,7 +20,7 @@ std::string GetResourcePath() {
 
     // todo: check if folder exists, look for best location...
     
-    std::string rv = "../../resources/";
+    std::string rv = "./resources/";
 
 #ifdef __APPLE__
 	// check if running in app bundle
