@@ -17,6 +17,7 @@ ManagerWidget::ManagerWidget(latero::graphics::TactileEngine *tEngine, latero::g
 	box->pack_start(preview_);
 	box->pack_start(*exp, Gtk::PACK_SHRINK);
 	exp->add(notebook_);
+	exp->set_vexpand(false);
 	show_all_children();
 
 	notebook_.signal_switch_page().connect(
