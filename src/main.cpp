@@ -1,6 +1,5 @@
 #include <iostream>
-//#include <sys/mman.h>
-#include <gtkmm/main.h>
+#include <gtkmm/application.h>
 #include "mainwindow.h"
 #include <laterographics/tactileengine.h>
 #include <laterographics/audioengine.h>
