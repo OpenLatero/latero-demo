@@ -21,45 +21,42 @@ MainWindow::MainWindow(latero::graphics::TactileEngine *tEngine, latero::graphic
 
 Gtk::Widget *MainWindow::CreateMenu()
 {
-	Glib::RefPtr<Gtk::ActionGroup> group = Gtk::ActionGroup::create();
+	// Create action group and add actions
+	auto action_group = Gio::SimpleActionGroup::create();
+	action_group->add_action("open",  sigc::mem_fun(*this, &MainWindow::OnOpen));
+	action_group->add_action("save",  sigc::mem_fun(*this, &MainWindow::OnSave));
+	action_group->add_action("close", sigc::mem_fun(*this, &MainWindow::OnClose));
+	insert_action_group("file", action_group);
 
-	group->add(Gtk::Action::create("FileMenu", "File"));
-	group->add(Gtk::Action::create("FileOpen", Gtk::Stock::OPEN),
-  		sigc::mem_fun(*this, &MainWindow::OnOpen));
-	group->add(Gtk::Action::create("FileSave", Gtk::Stock::SAVE),
-  		sigc::mem_fun(*this, &MainWindow::OnSave));
-	group->add(Gtk::Action::create("FileClose", Gtk::Stock::CLOSE),
-  		sigc::mem_fun(*this, &MainWindow::OnClose));
+	// Define the menubar using Builder XML
+	auto builder = Gtk::Builder::create_from_string(R"(
+	<?xml version="1.0" encoding="UTF-8"?>
+	<interface>
+  	<menu id="MenuBar">
+    <submenu>
+      <attribute name="label">File</attribute>
+      <item>
+        <attribute name="label">Open</attribute>
+        <attribute name="action">file.open</attribute>
+      </item>
+      <item>
+        <attribute name="label">Save</attribute>
+        <attribute name="action">file.save</attribute>
+      </item>
+      <item>
+        <attribute name="label">Close</attribute>
+        <attribute name="action">file.close</attribute>
+      </item>
+    </submenu>
+  	</menu>
+	</interface>
+	)");
 
-	uiManager_ = Gtk::UIManager::create();
-	uiManager_->insert_action_group(group);
- 	add_accel_group(uiManager_->get_accel_group());
+	// Get the menu model and create a MenuBar from it
+	auto menu_model = Glib::RefPtr<Gio::Menu>::cast_dynamic(builder->get_object("MenuBar"));
+	auto menubar = Gtk::manage(new Gtk::MenuBar(menu_model));
+	return menubar;
 
-	std::stringstream fileMenuUI;
-	fileMenuUI << "<menu action='FileMenu'>";
-	fileMenuUI << 	"<menuitem action='FileOpen'/>";
-	fileMenuUI << 	"<menuitem action='FileSave'/>";
-	fileMenuUI << 	"<menuitem action='FileClose'/>";
-	fileMenuUI << "</menu>";
-
-	std::stringstream buf;
-	buf << "<ui>";
-	buf << "<menubar name='MenuBar'>";
-	buf << fileMenuUI.str();
-	buf << "</menubar>";
-	buf << "</ui>";
-
-	try
-	{
-		uiManager_->add_ui_from_string(buf.str());
-	}
-	catch(const Glib::Error& ex)
-	{
-		std::cerr << "building menus failed: " <<  ex.what();
-		exit(1);
-	}
-
-	return uiManager_->get_widget("/MenuBar");
 }
 
 MainWindow::~MainWindow()

@@ -13,3 +13,5 @@ set(latero_demo_SRCS
 add_executable(latero-demo ${latero_demo_SRCS})
 target_link_libraries(latero-demo "-framework Foundation" Boost::program_options laterographics::laterographics)
 install_programs(/bin latero-demo)
+
+target_compile_definitions(latero-demo PRIVATE GDK_DISABLE_DEPRECATED GTK_DISABLE_DEPRECATED GTKMM_DISABLE_DEPRECATED)

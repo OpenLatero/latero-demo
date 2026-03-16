@@ -21,8 +21,6 @@ protected:
 	void OnClose();
 
 	Gtk::Widget *CreateMenu();
-
-	Glib::RefPtr<Gtk::UIManager> uiManager_;
 	ManagerWidget managerWidget_;
 };
 

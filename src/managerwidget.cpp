@@ -44,8 +44,8 @@ void ManagerWidget::Save()
  
 	dir += "/cards"; // TODO
 	dialog.set_current_folder(dir);
-	dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
-	dialog.add_button(Gtk::Stock::SAVE, Gtk::RESPONSE_OK);
+	dialog.add_button("Cancel", Gtk::RESPONSE_CANCEL);
+	dialog.add_button("Save", Gtk::RESPONSE_OK);
 	dialog.set_default_response(Gtk::RESPONSE_CANCEL);
 	dialog.set_current_name("card.gen");
 
@@ -80,8 +80,8 @@ void ManagerWidget::Open()
 	dir += "/cards"; // TODO
 
 	dialog.set_current_folder(dir);
-	dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
-	dialog.add_button(Gtk::Stock::OPEN, Gtk::RESPONSE_OK);
+	dialog.add_button("Cancel", Gtk::RESPONSE_CANCEL);
+	dialog.add_button("Open", Gtk::RESPONSE_OK);
 	dialog.set_default_response(Gtk::RESPONSE_OK);
 	dialog.add_filter(filter);
 
