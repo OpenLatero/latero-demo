@@ -9,7 +9,7 @@ MainWindow::MainWindow(latero::graphics::TactileEngine *tEngine, latero::graphic
 	set_border_width(10);
 	set_size_request(1000,800);
 
-	Gtk::VBox *box = new Gtk::VBox;
+	auto box = new Gtk::Box(Gtk::ORIENTATION_VERTICAL);
 
 	add(*manage(box));
 	box->pack_start(*manage(CreateMenu()), Gtk::PACK_SHRINK);
