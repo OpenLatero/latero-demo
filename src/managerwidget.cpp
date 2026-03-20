@@ -99,7 +99,6 @@ void ManagerWidget::AddGenerator(latero::graphics::GeneratorPtr gen, std::string
 {
 	list_.push_back(gen);
 	int i = notebook_.append_page(*manage(gen->CreateWidget(gen)), name);
-	//show_all_children(); 
 	//notebook_.set_current_page(i);
 	UpdateCurrentGenerator();
 }
