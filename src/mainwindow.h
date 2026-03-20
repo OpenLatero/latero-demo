@@ -8,7 +8,8 @@ class MainWindow : public Gtk::Window
 {
 public:
 	MainWindow(latero::graphics::TactileEngine *tEngine,
-               latero::graphics::AudioEngine *aEngine);
+               latero::graphics::AudioEngine *aEngine,
+               std::vector<std::string> generators = {});
 
     virtual ~MainWindow();
 

@@ -21,7 +21,7 @@ public:
     void AddGenerator(latero::graphics::GeneratorPtr gen, std::string name="Generator");
     
 protected:
-	bool OnKeyPress(GdkEventKey* event);
+	bool OnKeyPress(guint keyval, guint keycode, Gdk::ModifierType state);
 	
 	void UpdateCurrentGenerator();
 	void OnPageSwitch(Gtk::Widget* page, guint page_num);

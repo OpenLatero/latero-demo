@@ -2,21 +2,24 @@
 #include <sstream>
 #include <iostream>
 
-MainWindow::MainWindow(latero::graphics::TactileEngine *tEngine, latero::graphics::AudioEngine *aEngine) :
+MainWindow::MainWindow(latero::graphics::TactileEngine *tEngine, latero::graphics::AudioEngine *aEngine, std::vector<std::string> generators) :
 	managerWidget_(tEngine, aEngine)
 {
 	set_title("Latero Demo");
-	set_border_width(10);
 	set_size_request(1000,800);
 
-	auto box = new Gtk::Box(Gtk::ORIENTATION_VERTICAL);
+	auto box = new Gtk::Box(Gtk::Orientation::VERTICAL);
+	box->set_margin(10);
 
-	add(*manage(box));
-	box->pack_start(*manage(CreateMenu()), Gtk::PACK_SHRINK);
-	box->pack_start(managerWidget_);
+	set_child(*Gtk::manage(box));
+	box->append(*Gtk::manage(CreateMenu()));
+	box->append(managerWidget_);
+	managerWidget_.set_expand();
 
 	maximize();
-	show_all_children();
+
+	for (auto& gen : generators)
+		AddGenerator(gen);
 }
 
 Gtk::Widget *MainWindow::CreateMenu()
@@ -52,9 +55,9 @@ Gtk::Widget *MainWindow::CreateMenu()
 	</interface>
 	)");
 
-	// Get the menu model and create a MenuBar from it
-	auto menu_model = Glib::RefPtr<Gio::Menu>::cast_dynamic(builder->get_object("MenuBar"));
-	auto menubar = Gtk::manage(new Gtk::MenuBar(menu_model));
+	// Get the menu model and create a PopoverMenuBar from it
+	auto menu_model = builder->get_object<Gio::Menu>("MenuBar");
+	auto menubar = Gtk::manage(new Gtk::PopoverMenuBar(menu_model));
 	return menubar;
 
 }

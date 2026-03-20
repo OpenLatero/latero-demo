@@ -26,8 +26,6 @@
 #include <laterographics/generator.h>
 #include <laterographics/positiongen.h>
 #include <laterographics/visualizewidget.h>
-#include <gtkmm/menu.h>
-#include <gtkmm/filechooserdialog.h>
 #include <iostream>
 #include "boost/date_time/posix_time/posix_time.hpp"
 #include "boost/date_time/local_time_adjustor.hpp"
@@ -42,7 +40,7 @@ VirtualSurfaceArea::VirtualSurfaceArea(const latero::Tactograph *dev) :
 	dev_(dev),
 	tdState_(dev->GetFrameSizeX(), dev->GetFrameSizeY())
 {
-    signal_draw().connect(sigc::mem_fun(*this, &VirtualSurfaceArea::OnDraw));	
+    set_draw_func(sigc::mem_fun(*this, &VirtualSurfaceArea::OnDraw));
 }
 
 
@@ -51,10 +49,9 @@ VirtualSurfaceArea::~VirtualSurfaceArea()
 }
 
 
-bool VirtualSurfaceArea::OnDraw(const Cairo::RefPtr<Cairo::Context>& cr)
+void VirtualSurfaceArea::OnDraw(const Cairo::RefPtr<Cairo::Context>& cr, int /*width*/, int /*height*/)
 {
 	DrawCursor(cr);
-	return true;
 }
 
 
@@ -133,12 +130,7 @@ void VirtualSurfaceArea::SetDisplayState(const latero::BiasedImg &f)
 
 void VirtualSurfaceArea::Invalidate()
 {
-    Glib::RefPtr<Gdk::Window> win = get_window();
-    if (win)
-    {
-        Gdk::Rectangle r(0, 0, get_allocation().get_width(), get_allocation().get_height());
-        win->invalidate_rect(r, false);
-    }
+    queue_draw();
 }
 
 
