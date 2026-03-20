@@ -62,14 +62,13 @@ Cairo::RefPtr<Cairo::Pattern> VirtualSurfaceArea::GetCursorDrawing(const Cairo::
 
 	if ((w<=0)||(h<=0))
 	{
-		std::cout << "VirtualSurfaceArea::GetCursorDrawing() called with width or heigh of 0. Ignoring.\n";
 		cr->push_group();
 		return cr->pop_group(); // TODO: cleaner way?
 	}
 	
+	cr->push_group();
     double dpmm_x =  w / GetWidthMilli();
     double dpmm_y = h / GetHeightMilli();
-	std::cout << "cr->scale(" << dpmm_x << ", " << dpmm_y << ")\n";
     cr->scale(dpmm_x, dpmm_y);		// scale to mm
 	cr->set_source(GetDisplayDrawing(cr));
     cr->paint();

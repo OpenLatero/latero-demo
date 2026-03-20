@@ -15,7 +15,8 @@ ManagerWidget::ManagerWidget(latero::graphics::TactileEngine *tEngine, latero::g
 	exp->set_expanded(true);
 	set_child(*box);
 	box->append(preview_);
-	preview_.set_expand();
+	preview_.set_vexpand();
+	preview_.set_hexpand();
 	box->append(*exp);
 	exp->set_child(notebook_);
 	exp->set_vexpand(false);
