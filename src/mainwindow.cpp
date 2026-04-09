@@ -7,29 +7,20 @@ MainWindow::MainWindow(latero::graphics::TactileEngine *tEngine, latero::graphic
 {
 	set_title("Latero Demo");
 	set_size_request(1000,800);
-
-	auto box = new Gtk::Box(Gtk::Orientation::VERTICAL);
-	box->set_margin(10);
-
-	set_child(*Gtk::manage(box));
-	box->append(*Gtk::manage(CreateMenu()));
-	box->append(managerWidget_);
-	managerWidget_.set_expand();
-
+	set_child(managerWidget_);
+	signal_realize().connect(sigc::mem_fun(*this, &MainWindow::CreateMenu));
 	maximize();
 
 	for (auto& gen : generators)
 		AddGenerator(gen);
 }
 
-Gtk::Widget *MainWindow::CreateMenu()
+void MainWindow::CreateMenu()
 {
-	// Create action group and add actions
-	auto action_group = Gio::SimpleActionGroup::create();
-	action_group->add_action("open",  sigc::mem_fun(*this, &MainWindow::OnOpen));
-	action_group->add_action("save",  sigc::mem_fun(*this, &MainWindow::OnSave));
-	action_group->add_action("close", sigc::mem_fun(*this, &MainWindow::OnClose));
-	insert_action_group("file", action_group);
+	// Register actions directly on the window so they're accessible as win.*
+	add_action("open",  sigc::mem_fun(*this, &MainWindow::OnOpen));
+	add_action("save",  sigc::mem_fun(*this, &MainWindow::OnSave));
+	add_action("close", sigc::mem_fun(*this, &MainWindow::OnClose));
 
 	// Define the menubar using Builder XML
 	auto builder = Gtk::Builder::create_from_string(R"(
@@ -40,15 +31,15 @@ Gtk::Widget *MainWindow::CreateMenu()
       <attribute name="label">File</attribute>
       <item>
         <attribute name="label">Open</attribute>
-        <attribute name="action">file.open</attribute>
+        <attribute name="action">win.open</attribute>
       </item>
       <item>
         <attribute name="label">Save</attribute>
-        <attribute name="action">file.save</attribute>
+        <attribute name="action">win.save</attribute>
       </item>
       <item>
         <attribute name="label">Close</attribute>
-        <attribute name="action">file.close</attribute>
+        <attribute name="action">win.close</attribute>
       </item>
     </submenu>
   	</menu>
@@ -57,9 +48,8 @@ Gtk::Widget *MainWindow::CreateMenu()
 
 	// Get the menu model and create a PopoverMenuBar from it
 	auto menu_model = builder->get_object<Gio::Menu>("MenuBar");
-	auto menubar = Gtk::manage(new Gtk::PopoverMenuBar(menu_model));
-	return menubar;
-
+	get_application()->set_menubar(menu_model);
+	set_show_menubar(true);
 }
 
 MainWindow::~MainWindow()

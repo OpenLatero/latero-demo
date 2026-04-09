@@ -4,7 +4,7 @@
 #include "managerwidget.h"
 #include <gtkmm.h>
 
-class MainWindow : public Gtk::Window
+class MainWindow : public Gtk::ApplicationWindow
 {
 public:
 	MainWindow(latero::graphics::TactileEngine *tEngine,
@@ -21,7 +21,7 @@ protected:
 	void OnSave();
 	void OnClose();
 
-	Gtk::Widget *CreateMenu();
+	void CreateMenu();
 	ManagerWidget managerWidget_;
 };
 
