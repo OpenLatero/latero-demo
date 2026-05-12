@@ -10,8 +10,8 @@ ManagerWidget::ManagerWidget(latero::graphics::TactileEngine *tEngine, latero::g
 	tEngine_(tEngine),
 	aEngine_(aEngine)
 {
-	auto box = manage(new Gtk::Box(Gtk::Orientation::VERTICAL));
-	Gtk::Expander *exp = manage(new Gtk::Expander("settings"));
+	auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
+	auto exp = Gtk::make_managed<Gtk::Expander>("settings");
 	exp->set_expanded(true);
 	set_child(*box);
 	box->append(preview_);
@@ -98,7 +98,7 @@ void ManagerWidget::AddGenerator(std::string filename) {
 void ManagerWidget::AddGenerator(latero::graphics::GeneratorPtr gen, std::string name)
 {
 	list_.push_back(gen);
-	int i = notebook_.append_page(*manage(gen->CreateWidget(gen)), name);
+	int i = notebook_.append_page(*Gtk::manage(gen->CreateWidget(gen)), name);
 	//notebook_.set_current_page(i);
 	UpdateCurrentGenerator();
 }
