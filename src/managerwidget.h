@@ -1,5 +1,4 @@
-#ifndef PIEZO_MANAGER_WIDGET_H
-#define PIEZO_MANAGER_WIDGET_H
+#pragma once
 
 #include <gtkmm/notebook.h>
 #include <gtkmm/frame.h>
@@ -33,5 +32,3 @@ protected:
 	std::vector<latero::graphics::GeneratorPtr> list_;
 	latero::graphics::GeneratorPtr currentGen_;
 };
-
-#endif

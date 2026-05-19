@@ -1,5 +1,4 @@
-#ifndef MAIN_WINDOW_H
-#define MAIN_WINDOW_H
+#pragma once
 
 #include "managerwidget.h"
 #include <gtkmm.h>
@@ -25,4 +24,3 @@ protected:
 	ManagerWidget managerWidget_;
 };
 
-#endif

@@ -19,8 +19,7 @@
 //
 // -----------------------------------------------------------
 
-#ifndef DRAWING_H
-#define DRAWING_H
+#pragma once
 
 #include <gtkmm.h>
 #include <latero/tactileimg.h>
@@ -112,6 +111,3 @@ private:
 	latero::graphics::GeneratorPtr peer_;
 	boost::posix_time::ptime bgUpdateTime_;
 };
-
-
-#endif
