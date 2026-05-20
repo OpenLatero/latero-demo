@@ -1,14 +1,14 @@
-#ifndef MAIN_WINDOW_H
-#define MAIN_WINDOW_H
+#pragma once
 
 #include "managerwidget.h"
 #include <gtkmm.h>
 
-class MainWindow : public Gtk::Window
+class MainWindow : public Gtk::ApplicationWindow
 {
 public:
 	MainWindow(latero::graphics::TactileEngine *tEngine,
-               latero::graphics::AudioEngine *aEngine);
+               latero::graphics::AudioEngine *aEngine,
+               std::vector<std::string> generators = {});
 
     virtual ~MainWindow();
 
@@ -20,8 +20,7 @@ protected:
 	void OnSave();
 	void OnClose();
 
-	Gtk::Widget *CreateMenu();
+	void CreateMenu();
 	ManagerWidget managerWidget_;
 };
 
-#endif

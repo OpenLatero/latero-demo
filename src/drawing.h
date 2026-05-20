@@ -19,14 +19,9 @@
 //
 // -----------------------------------------------------------
 
-#ifndef DRAWING_H
-#define DRAWING_H
+#pragma once
 
-#include <gtkmm/uimanager.h>
-#include <gtkmm/drawingarea.h>
-#include <gtkmm/alignment.h>
-#include <gtkmm/aspectframe.h>
-#include <gtkmm/eventbox.h>
+#include <gtkmm.h>
 #include <latero/tactileimg.h>
 #include <latero/tactograph.h>
 #include <laterographics/gtk/animation.h>
@@ -44,8 +39,8 @@ public:
 	void SetDisplayState(const latero::BiasedImg &frame);
 
 	
-	inline uint GetWidth() { return get_allocation().get_width(); };
-	inline uint GetHeight() { return get_allocation().get_height(); };
+	inline uint GetWidth() { return get_width(); };
+	inline uint GetHeight() { return get_height(); };
 
 	Cairo::RefPtr<Cairo::Pattern> GetDisplayDrawing(const Cairo::RefPtr<Cairo::Context> &mmContext);
     
@@ -61,7 +56,7 @@ protected:
 
 	void DrawCursor(const Cairo::RefPtr<Cairo::Context> &cr);
 
-	bool OnDraw(const Cairo::RefPtr<Cairo::Context>& cr);
+	void OnDraw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
 	//virtual bool on_expose_event(GdkEventExpose* event);
     
     
@@ -76,17 +71,18 @@ protected:
  * This widget represents the virtual surface explored by a tactile display. It is implement as an AspectFrame enclosing a 
  * DrawingArea so that the aspect ratio can be maintained.
  */
-class BaseVirtualSurfaceWidget : public Gtk::EventBox
+class BaseVirtualSurfaceWidget : public Gtk::Box
 {
 public:
 	BaseVirtualSurfaceWidget(const latero::Tactograph *dev) :
- 		frame_("", 0.5, 0.5, dev->GetWidth()/dev->GetHeight(), false),
+ 		frame_(0.5, 0.5, dev->GetWidth()/dev->GetHeight(), false),
 		surface_(dev)
 	{
-		add(frame_);
-		frame_.unset_label(); // this is necessary to remove blank above surface
-		frame_.set_shadow_type(Gtk::SHADOW_NONE); // this removes the border
-		frame_.add(surface_);
+		append(frame_);
+		//frame_.unset_label(); // this is necessary to remove blank above surface
+		//frame_.set_shadow_type(Gtk::SHADOW_NONE); // this removes the border
+		frame_.set_child(surface_);
+		surface_.set_expand();
 	}
 
 	virtual ~BaseVirtualSurfaceWidget()
@@ -115,6 +111,3 @@ private:
 	latero::graphics::GeneratorPtr peer_;
 	boost::posix_time::ptime bgUpdateTime_;
 };
-
-
-#endif

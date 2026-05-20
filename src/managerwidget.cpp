@@ -3,6 +3,7 @@
 #include <gtkmm.h>
 #include <iostream>
 #include <fstream>
+#include <filesystem>
 #include <laterographics/generator.h>
 
 ManagerWidget::ManagerWidget(latero::graphics::TactileEngine *tEngine, latero::graphics::AudioEngine *aEngine) :
@@ -10,25 +11,24 @@ ManagerWidget::ManagerWidget(latero::graphics::TactileEngine *tEngine, latero::g
 	tEngine_(tEngine),
 	aEngine_(aEngine)
 {
-	auto box = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL));
-	Gtk::Expander *exp = manage(new Gtk::Expander("settings"));
+	auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
+	auto exp = Gtk::make_managed<Gtk::Expander>("settings");
 	exp->set_expanded(true);
-	add(*box);
-	box->pack_start(preview_);
-	box->pack_start(*exp, Gtk::PACK_SHRINK);
-	exp->add(notebook_);
+	set_child(*box);
+	box->append(preview_);
+	preview_.set_vexpand();
+	preview_.set_hexpand();
+	box->append(*exp);
+	exp->set_child(notebook_);
 	exp->set_vexpand(false);
-	show_all_children();
 
 	notebook_.signal_switch_page().connect(
 		sigc::mem_fun(*this,&ManagerWidget::OnPageSwitch));
 
-	//AddGenerator(gen);
-
-	signal_key_press_event().connect(
-		sigc::mem_fun(*this, &ManagerWidget::OnKeyPress));
-
-
+	auto key_controller = Gtk::EventControllerKey::create();
+	key_controller->signal_key_pressed().connect(
+		sigc::mem_fun(*this, &ManagerWidget::OnKeyPress), false);
+	add_controller(key_controller);
 };
 
 void ManagerWidget::OnPageSwitch(Gtk::Widget* page, guint page_num)
@@ -38,22 +38,19 @@ void ManagerWidget::OnPageSwitch(Gtk::Widget* page, guint page_num)
 
 void ManagerWidget::Save()
 {
-	Gtk::FileChooserDialog dialog("Please select a generator file.", Gtk::FILE_CHOOSER_ACTION_SAVE);
+	auto dialog = Gtk::FileDialog::create();
+	dialog->set_title("Please select a generator file.");
+	dialog->set_initial_folder(Gio::File::create_for_path(Glib::get_current_dir() + "/cards"));
+	dialog->set_initial_name("card.gen");
 
-	std::string dir = Glib::get_current_dir();
- 
-	dir += "/cards"; // TODO
-	dialog.set_current_folder(dir);
-	dialog.add_button("Cancel", Gtk::RESPONSE_CANCEL);
-	dialog.add_button("Save", Gtk::RESPONSE_OK);
-	dialog.set_default_response(Gtk::RESPONSE_CANCEL);
-	dialog.set_current_name("card.gen");
-
-	if (Gtk::RESPONSE_OK == dialog.run())		
-	{
-		std::string filename = dialog.get_filename();
-		if (currentGen_) currentGen_->SaveToFile(dialog.get_filename());
-	}
+	auto* window = dynamic_cast<Gtk::Window*>(get_root());
+	dialog->save(*window, [this, dialog](Glib::RefPtr<Gio::AsyncResult>& result) {
+		try {
+			auto file = dialog->save_finish(result);
+			if (file && currentGen_)
+				currentGen_->SaveToFile(file->get_path());
+		} catch (const Glib::Error&) {}
+	});
 }
 
 void ManagerWidget::Close()
@@ -71,39 +68,35 @@ void ManagerWidget::Close()
 
 void ManagerWidget::Open()
 {
-	Gtk::FileChooserDialog dialog("Please select a generator file.", Gtk::FILE_CHOOSER_ACTION_OPEN);
+	auto dialog = Gtk::FileDialog::create();
+	dialog->set_title("Please select a generator file.");
+	dialog->set_initial_folder(Gio::File::create_for_path(Glib::get_current_dir() + "/cards"));
 
-	Glib::RefPtr<Gtk::FileFilter> filter = Gtk::FileFilter::create();
+	auto filter = Gtk::FileFilter::create();
 	filter->add_pattern("*.gen");
- 
-	std::string dir = Glib::get_current_dir();
-	dir += "/cards"; // TODO
+	auto filters = Gio::ListStore<Gtk::FileFilter>::create();
+	filters->append(filter);
+	dialog->set_filters(filters);
 
-	dialog.set_current_folder(dir);
-	dialog.add_button("Cancel", Gtk::RESPONSE_CANCEL);
-	dialog.add_button("Open", Gtk::RESPONSE_OK);
-	dialog.set_default_response(Gtk::RESPONSE_OK);
-	dialog.add_filter(filter);
-
-	if (Gtk::RESPONSE_OK == dialog.run())		
-	{
-		AddGenerator(dialog.get_filename());
-	}
+	auto* window = dynamic_cast<Gtk::Window*>(get_root());
+	dialog->open(*window, [this, dialog](Glib::RefPtr<Gio::AsyncResult>& result) {
+		try {
+			auto file = dialog->open_finish(result);
+			if (file)
+				AddGenerator(file->get_path());
+		} catch (const Glib::Error&) {}
+	});
 }
 
 void ManagerWidget::AddGenerator(std::string filename) {
-    std::string name = filename;
-    size_t dot = name.find_last_of(".");
-    if (dot != std::string::npos)
-        name = name.substr(0, dot);
+    std::string name = std::filesystem::path(filename).stem().string();
     AddGenerator(latero::graphics::Generator::Create(filename, tEngine_->Dev()), name);
 }
 
 void ManagerWidget::AddGenerator(latero::graphics::GeneratorPtr gen, std::string name)
 {
 	list_.push_back(gen);
-	int i = notebook_.append_page(*manage(gen->CreateWidget(gen)), name);
-	show_all_children(); 
+	int i = notebook_.append_page(*Gtk::manage(gen->CreateWidget(gen)), name);
 	//notebook_.set_current_page(i);
 	UpdateCurrentGenerator();
 }
@@ -121,10 +114,10 @@ void ManagerWidget::UpdateCurrentGenerator()
 	aEngine_->SetGenerator(currentGen_);
 }
 
-bool ManagerWidget::OnKeyPress(GdkEventKey* event)
+bool ManagerWidget::OnKeyPress(guint keyval, guint keycode, Gdk::ModifierType state)
 {
 	if (currentGen_) 
-        return currentGen_->OnKeyPress(event);
+        return currentGen_->OnKeyPress(keyval, keycode, state);
     else
         return false;
 }
