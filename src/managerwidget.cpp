@@ -3,6 +3,7 @@
 #include <gtkmm.h>
 #include <iostream>
 #include <fstream>
+#include <filesystem>
 #include <laterographics/generator.h>
 
 ManagerWidget::ManagerWidget(latero::graphics::TactileEngine *tEngine, latero::graphics::AudioEngine *aEngine) :
@@ -88,10 +89,7 @@ void ManagerWidget::Open()
 }
 
 void ManagerWidget::AddGenerator(std::string filename) {
-    std::string name = filename;
-    size_t dot = name.find_last_of(".");
-    if (dot != std::string::npos)
-        name = name.substr(0, dot);
+    std::string name = std::filesystem::path(filename).stem().string();
     AddGenerator(latero::graphics::Generator::Create(filename, tEngine_->Dev()), name);
 }
 
