@@ -96,7 +96,7 @@ void ManagerWidget::AddGenerator(std::string filename) {
 void ManagerWidget::AddGenerator(latero::graphics::GeneratorPtr gen, std::string name)
 {
 	list_.push_back(gen);
-	int i = notebook_.append_page(*Gtk::manage(gen->CreateWidget(gen)), name);
+	int i = notebook_.append_page(*gen->CreateWidget(gen), name);
 	//notebook_.set_current_page(i);
 	UpdateCurrentGenerator();
 }
