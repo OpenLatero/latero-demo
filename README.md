@@ -6,8 +6,6 @@ A program that makes use of the latero-graphics library and showcases the Latero
 
 ### macOS
 
-Tested on macOS Tahoe 26.3.1.
-
 Install the latero and latero-graphics libraries, then:
 
 ```sh
