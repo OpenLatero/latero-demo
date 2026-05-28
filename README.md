@@ -22,13 +22,6 @@ Or all together:
 ```sh
 cmake --preset default && cmake --build build && build/src/latero-demo
 ```
-
-**Create an app bundle** (currently broken):
-```sh
-../create_app_bundle.sh
-```
-You should then be able to launch the program by clicking on the latero-demo app bundle.
-
 ---
 
 ## Authors
