@@ -6,7 +6,9 @@ A program that makes use of the latero-graphics library and showcases the Latero
 
 ### MacOS
 
-Install the latero and latero-graphics libraries, then:
+#### Install OpenLatero libraries
+
+Install the [latero](https://github.com/OpenLatero/latero) and [latero-graphics](https://github.com/OpenLatero/latero-graphics) libraries.
 
 #### Build and run the app
 
