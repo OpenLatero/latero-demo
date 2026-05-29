@@ -8,21 +8,26 @@ A program that makes use of the latero-graphics library and showcases the Latero
 
 Install the latero and latero-graphics libraries, then:
 
-```sh
-# Build
+#### Build and run the app
+
+The app can be compiled with the following commands:
+
+```
 cmake --preset default
 cmake --build build
+```
 
-# Run
+and ran with this command:
+
+```
 build/src/latero-demo
 ```
 
-Or all together:
+or in a single command:
 
-```sh
+```
 cmake --preset default && cmake --build build && build/src/latero-demo
 ```
----
 
 ## Authors
 
