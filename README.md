@@ -4,7 +4,7 @@ A program that makes use of the latero-graphics library and showcases the Latero
 
 ## Installation
 
-### macOS
+### MacOS
 
 Install the latero and latero-graphics libraries, then:
 
