@@ -5,8 +5,6 @@ set(latero_demo_SRCS
     mainwindow.h
     mainwindow.cpp
     main.cpp
-    managerwidget.h
-    managerwidget.cpp
     drawing.h
     drawing.cpp)
 
