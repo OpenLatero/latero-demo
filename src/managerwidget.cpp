@@ -1,12 +1,11 @@
 #include "managerwidget.h"
 #include <assert.h>
-#include <gtkmm.h>
 #include <iostream>
 #include <fstream>
 #include <filesystem>
 #include <laterographics/generator.h>
 
-ManagerWidget::ManagerWidget(latero::graphics::TactileEngine *tEngine, latero::graphics::AudioEngine *aEngine) :
+ManagerWidget::ManagerWidget(latero::graphics::TactileEngine *tEngine, latero::graphics::AudioEngine *aEngine, std::vector<std::string> generators) :
 	preview_(tEngine->Dev(), latero::graphics::GeneratorPtr(), true),
 	tEngine_(tEngine),
 	aEngine_(aEngine)
@@ -29,64 +28,27 @@ ManagerWidget::ManagerWidget(latero::graphics::TactileEngine *tEngine, latero::g
 	key_controller->signal_key_pressed().connect(
 		sigc::mem_fun(*this, &ManagerWidget::OnKeyPress), false);
 	add_controller(key_controller);
+
+	set_title("Latero Demo");
+	set_size_request(1000,800);
+	maximize();
+
+	for (auto& gen : generators)
+		AddGenerator(gen);
+
 };
+
+ManagerWidget::~ManagerWidget()
+{
+	destroying_ = true;
+}
 
 void ManagerWidget::OnPageSwitch(Gtk::Widget* page, guint page_num)
 {
-	UpdateCurrentGenerator();
-}
-
-void ManagerWidget::Save()
-{
-	auto dialog = Gtk::FileDialog::create();
-	dialog->set_title("Please select a generator file.");
-	dialog->set_initial_folder(Gio::File::create_for_path(Glib::get_current_dir() + "/cards"));
-	dialog->set_initial_name("card.gen");
-
-	auto* window = dynamic_cast<Gtk::Window*>(get_root());
-	dialog->save(*window, [this, dialog](Glib::RefPtr<Gio::AsyncResult>& result) {
-		try {
-			auto file = dialog->save_finish(result);
-			if (file && currentGen_)
-				currentGen_->SaveToFile(file->get_path());
-		} catch (const Glib::Error&) {}
-	});
-}
-
-void ManagerWidget::Close()
-{
-	int page = notebook_.get_current_page();
-	if (page>=0)
-	{
-		list_.erase(list_.begin()+page);
-		notebook_.remove_page(page);
+	if (!destroying_)
 		UpdateCurrentGenerator();
-		//preview_.Clear(0xffffffff);
-	}
 }
 
-
-void ManagerWidget::Open()
-{
-	auto dialog = Gtk::FileDialog::create();
-	dialog->set_title("Please select a generator file.");
-	dialog->set_initial_folder(Gio::File::create_for_path(Glib::get_current_dir() + "/cards"));
-
-	auto filter = Gtk::FileFilter::create();
-	filter->add_pattern("*.gen");
-	auto filters = Gio::ListStore<Gtk::FileFilter>::create();
-	filters->append(filter);
-	dialog->set_filters(filters);
-
-	auto* window = dynamic_cast<Gtk::Window*>(get_root());
-	dialog->open(*window, [this, dialog](Glib::RefPtr<Gio::AsyncResult>& result) {
-		try {
-			auto file = dialog->open_finish(result);
-			if (file)
-				AddGenerator(file->get_path());
-		} catch (const Glib::Error&) {}
-	});
-}
 
 void ManagerWidget::AddGenerator(std::string filename) {
     std::string name = std::filesystem::path(filename).stem().string();

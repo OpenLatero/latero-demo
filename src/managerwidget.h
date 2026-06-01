@@ -1,20 +1,16 @@
 #pragma once
 
-#include <gtkmm/notebook.h>
-#include <gtkmm/frame.h>
+#include <gtkmm.h>
 #include "drawing.h"
 #include <laterographics/tactileengine.h>
 #include <laterographics/audioengine.h>
+#include <vector>
 
-class ManagerWidget : public Gtk::Frame
+class ManagerWidget : public Gtk::ApplicationWindow
 {
 public:
-    ManagerWidget(latero::graphics::TactileEngine *tEngine, latero::graphics::AudioEngine *aEngine);
-    virtual ~ManagerWidget() {};
-
-	void Save();
-	void Open();
-	void Close();
+    ManagerWidget(latero::graphics::TactileEngine *tEngine, latero::graphics::AudioEngine *aEngine, std::vector<std::string> generators = {});
+    virtual ~ManagerWidget();
 
     void AddGenerator(std::string filename);
     void AddGenerator(latero::graphics::GeneratorPtr gen, std::string name="Generator");
@@ -25,6 +21,7 @@ protected:
 	void UpdateCurrentGenerator();
 	void OnPageSwitch(Gtk::Widget* page, guint page_num);
 
+	bool destroying_ = false;
 	Gtk::Notebook notebook_;
 	VirtualSurfaceWidget preview_;
 	latero::graphics::TactileEngine *tEngine_;
