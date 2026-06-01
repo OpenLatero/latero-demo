@@ -1,6 +1,6 @@
 #include <iostream>
 #include <gtkmm/application.h>
-#include "managerwidget.h"
+#include "mainwindow.h"
 #include <laterographics/tactileengine.h>
 #include <laterographics/audioengine.h>
 #include <laterographics/graphics/canvas.h>
@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
     
 	std::cout << "Creating GUI thread...\n";
 	auto app = Gtk::Application::create("org.openlatero.latero-demo");
-	int rv = app->make_window_and_run<ManagerWidget>(argc, argv, &tEngine, &aEngine, defaultGen);
+	int rv = app->make_window_and_run<MainWindow>(argc, argv, &tEngine, &aEngine, defaultGen);
 
 	std::cout << "Stopping engines...\n";
 	tEngine.Stop();
