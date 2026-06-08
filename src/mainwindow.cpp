@@ -6,7 +6,7 @@
 #include <laterographics/generator.h>
 
 MainWindow::MainWindow(latero::graphics::TactileEngine *tEngine, latero::graphics::AudioEngine *aEngine, std::vector<std::string> generators) :
-	preview_(tEngine->Dev(), latero::graphics::GeneratorPtr(), true),
+	preview_(tEngine->Dev()),
 	tEngine_(tEngine),
 	aEngine_(aEngine)
 {
