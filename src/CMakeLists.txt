@@ -4,9 +4,7 @@ find_package(Boost REQUIRED COMPONENTS program_options)
 set(latero_demo_SRCS
     mainwindow.h
     mainwindow.cpp
-    main.cpp
-    virtuallaterowidget.h
-    virtuallaterowidget.cpp)
+    main.cpp)
 
 add_executable(latero-demo ${latero_demo_SRCS})
 set_target_properties(latero-demo PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
