@@ -5,8 +5,8 @@ set(latero_demo_SRCS
     mainwindow.h
     mainwindow.cpp
     main.cpp
-    drawing.h
-    drawing.cpp)
+    virtuallaterowidget.h
+    virtuallaterowidget.cpp)
 
 add_executable(latero-demo ${latero_demo_SRCS})
 set_target_properties(latero-demo PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)

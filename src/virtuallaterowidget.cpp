@@ -1,8 +1,8 @@
-#include "drawing.h"
+#include "virtuallaterowidget.h"
 #include <laterographics/generator.h>
 #include <iostream>
 
-VirtualSurfaceWidget::VirtualSurfaceWidget(const latero::Tactograph *dev, latero::graphics::GeneratorPtr gen) :
+VirtualLateroWidget::VirtualLateroWidget(const latero::Tactograph *dev, latero::graphics::GeneratorPtr gen) :
  	Gtk::AspectFrame(0.5, 0.5, dev->GetWidth()/dev->GetHeight(), false),
 	peer_(gen),
 	dev_(dev),
@@ -12,47 +12,39 @@ VirtualSurfaceWidget::VirtualSurfaceWidget(const latero::Tactograph *dev, latero
 	drawingArea_.set_expand();
 
 	Glib::signal_timeout().connect(
-		sigc::mem_fun(*this, &VirtualSurfaceWidget::RefreshCursor),
+		sigc::mem_fun(*this, &VirtualLateroWidget::RefreshCursor),
 		(uint)33, // ms
 		Glib::PRIORITY_DEFAULT_IDLE);
 
-	drawingArea_.set_draw_func(sigc::mem_fun(*this, &VirtualSurfaceWidget::OnDraw));
+	drawingArea_.set_draw_func(sigc::mem_fun(*this, &VirtualLateroWidget::OnDraw));
 }
 
 
-VirtualSurfaceWidget::~VirtualSurfaceWidget()
+VirtualLateroWidget::~VirtualLateroWidget()
 {
 }
 
 
-void VirtualSurfaceWidget::OnDraw(const Cairo::RefPtr<Cairo::Context>& cr, int /*width*/, int /*height*/)
+void VirtualLateroWidget::OnDraw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height)
 {
-	int w = drawingArea_.get_width();
-	int h = drawingArea_.get_height();
-
-	if ((w<=0)||(h<=0))
+	if ((width<=0)||(height<=0))
 		return;
 
-	cr->push_group();
-    double dpmm_x =  w / GetWidthMilli();
-    double dpmm_y = h / GetHeightMilli();
-    cr->scale(dpmm_x, dpmm_y);		// scale to mm
-	cr->set_source(GetDisplayDrawing(cr));
-    cr->paint();
-	auto drawing = cr->pop_group();
+	double mmTDWidth = dev_->GetWidth() * 1.5;
+	double mmTDHeight = dev_->GetHeight() * 1.5;
 
-	cr->set_source(drawing);
+	cr->save();
+    cr->scale(width / mmTDWidth, height / mmTDHeight); // scale to mm
+	cr->translate(mmTDWidth/2, mmTDHeight/2);
+	cr->set_source(GetDisplayDrawing(cr));
 	cr->paint();
+	cr->restore();
 }
 
 
-
-
-Cairo::RefPtr<Cairo::Pattern> VirtualSurfaceWidget::GetDisplayDrawing(const Cairo::RefPtr<Cairo::Context> &mmContext)
+Cairo::RefPtr<Cairo::Pattern> VirtualLateroWidget::GetDisplayDrawing(const Cairo::RefPtr<Cairo::Context> &mmContext)
 {
 	mmContext->push_group();
-
-	mmContext->translate(GetWidthMilli()/2, GetHeightMilli()/2);
 
 	double tdw = dev_->GetWidth()*1.4;
 	double tdh = dev_->GetHeight()*1.2;
@@ -78,8 +70,7 @@ Cairo::RefPtr<Cairo::Pattern> VirtualSurfaceWidget::GetDisplayDrawing(const Cair
 			latero::graphics::Point p = dev_->GetActuatorOffset(i,j);
 			float x = p.x + (0.5-tdState_.Get(i,j))*motionRange;
 			mmContext->move_to(x, p.y - 0.5*hPiezo);
-	        	mmContext->line_to(x, p.y + 0.5*hPiezo);
-
+	        mmContext->line_to(x, p.y + 0.5*hPiezo);
 			mmContext->set_source_rgb(1.0, 0.0, 0.0);
 			mmContext->set_line_width(0.3*dev_->GetPitchX());
 			mmContext->stroke();
@@ -89,28 +80,18 @@ Cairo::RefPtr<Cairo::Pattern> VirtualSurfaceWidget::GetDisplayDrawing(const Cair
 }
 
 
-void VirtualSurfaceWidget::SetDisplayState(const latero::BiasedImg &f)
-{
-	assert(f.Size() ==  tdState_.Size());
-	tdState_ = f;
-    drawingArea_.queue_draw();
-}
-
-
-
-
-bool VirtualSurfaceWidget::RefreshCursor()
+bool VirtualLateroWidget::RefreshCursor()
 {
 	if (peer_)
 	{
-		latero::BiasedImg frame = peer_->GetLatestFrame();
-		SetDisplayState(frame);
+		tdState_ = peer_->GetLatestFrame();
+    	drawingArea_.queue_draw();
 	}
 	return true;
 }
 
 
-void VirtualSurfaceWidget::SetGenerator(latero::graphics::GeneratorPtr gen)
+void VirtualLateroWidget::SetGenerator(latero::graphics::GeneratorPtr gen)
 {
 	peer_ = gen;
 }
