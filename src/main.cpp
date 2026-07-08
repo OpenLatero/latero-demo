@@ -5,6 +5,7 @@
 #include <laterographics/audioengine.h>
 #include <laterographics/graphics/canvas.h>
 #include <boost/program_options.hpp>
+#include <filesystem>
 #include <limits.h>
 #include <mach-o/dyld.h>
 
@@ -89,7 +90,7 @@ int main(int argc, char *argv[])
     
     // chdir to Resource path
     std::string path = GetResourcePath();
-    chdir(path.c_str());
+    std::filesystem::current_path(path);
     
 	std::cout << "Creating GUI thread...\n";
 	auto app = Gtk::Application::create("org.openlatero.latero-demo");
