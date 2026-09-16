@@ -18,6 +18,13 @@ The dependencies can be installed through [MacPorts](https://www.macports.org) w
 sudo port install boost
 ```
 
+or through [Homebrew](https://brew.sh/) with the following command:
+
+```
+brew install boost
+```
+
+
 #### Build and run the app
 
 The app can be compiled with the following commands:
