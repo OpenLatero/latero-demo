@@ -71,6 +71,7 @@ int main(int argc, char *argv[])
 	if (vm.count("help")) { std::cout << desc << "\n"; return 1; }
 	float UpdateRateHz = DefaultUpdateRateHz; // default
 	if (vm.count("haptic-rate")) UpdateRateHz = vm["haptic-rate"].as<int>();
+	argc = 1; // prevent GTK from seeing our args as files to open
 	
 	latero::Tactograph dev;
 
