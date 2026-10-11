@@ -7,9 +7,9 @@
 #include <boost/program_options.hpp>
 #include <filesystem>
 #include <limits.h>
-#include <mach-o/dyld.h>
 
 #ifdef __APPLE__
+#include <mach-o/dyld.h>
 #include "CoreFoundation/CoreFoundation.h"
 #endif
 
@@ -20,7 +20,7 @@ std::string GetResourcePath() {
 
     // todo: check if folder exists, look for best location...
     
-    std::string rv = "./resources/";
+    std::string rv = "./Resources/";
 
 #ifdef __APPLE__
 	// check if running in app bundle

@@ -21,7 +21,7 @@ mkdir LateroDemo.app/Contents
 mkdir LateroDemo.app/Contents/MacOS
 
 echo "Copying resources..."
-cp -r ../resources LateroDemo.app/Contents/Resources
+cp -r ../Resources LateroDemo.app/Contents/Resources
 
 echo "Copying Info.plist..."
 cp ../appbundle/Info.plist LateroDemo.app/Contents/

@@ -4,7 +4,7 @@ A program that makes use of the latero-graphics library and showcases the Latero
 
 ## Installation
 
-### MacOS
+### MacOS / Linux
 
 #### Install OpenLatero libraries
 
@@ -12,7 +12,7 @@ Install the [latero](https://github.com/OpenLatero/latero) and [latero-graphics]
 
 #### Install dependencies
 
-The dependencies can be installed through [MacPorts](https://www.macports.org) with the following command:
+On MacOS, the dependencies can be installed through [MacPorts](https://www.macports.org) with the following command:
 
 ```
 sudo port install boost
@@ -24,6 +24,11 @@ or through [Homebrew](https://brew.sh/) with the following command:
 brew install boost
 ```
 
+On Linux, the dependencies can be installed with:
+
+```
+sudo apt install libboost-program-options-dev
+```
 
 #### Build and run the app
 
