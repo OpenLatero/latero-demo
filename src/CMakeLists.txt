@@ -1,4 +1,4 @@
-find_package(laterographics)
+find_package(laterographics 0.1 REQUIRED)
 find_package(Boost REQUIRED COMPONENTS program_options)
 
 set(latero_demo_SRCS
