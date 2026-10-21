@@ -9,8 +9,6 @@ Expand the instructions for your platform.
 <details>
 <summary><b>macOS</b></summary>
 
-_Last tested on macOS 27.0._
-
 #### Install OpenLatero libraries
 
 Install the [latero](https://github.com/OpenLatero/latero) and [latero-graphics](https://github.com/OpenLatero/latero-graphics) libraries.
@@ -66,8 +64,6 @@ The LateroDemo app bundle can then be found in the build folder. It can be click
 <details>
 <summary><b>Linux</b></summary>
 
-_Last tested on Ubuntu 26.04._
-
 #### Install OpenLatero libraries
 
 Install the [latero](https://github.com/OpenLatero/latero) and [latero-graphics](https://github.com/OpenLatero/latero-graphics) libraries.
@@ -105,8 +101,6 @@ cmake --preset default && cmake --build build && build/src/latero-demo
 
 <details>
 <summary><b>Windows</b></summary>
-
-_Last tested on Windows 11._
 
 On Windows, the app is built natively with the GCC toolchain of [MSYS2](https://www.msys2.org).
 
